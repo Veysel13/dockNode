@@ -1,0 +1,16 @@
+# Node.js bağımlılıkları
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# TypeScript derlenmiş dosyalar
+dist/
+*.js.map
+
+# Çevresel değişkenler (hassas bilgiler)
+.env
+
+# IDE ve işletim sistemi dosyaları
+.vscode/
+.DS_Store
+Thumbs.db
