@@ -1,18 +1,12 @@
-const express = require('express');
-const cors = require('cors');
+const dotenv = require('dotenv');
 
-const app = express();
-const userRoutes = require('../routes/userRoutes.js')
+dotenv.config();
 
-//Middlewares
-app.use(express.json());
-app.use(cors())
+import server from './src/server/index';
 
-//Routes
-app.use('/api', userRoutes);
+const PORT = process.env.PORT || 3001;
 
-
-module.exports = app;
+server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 
 // https://sequelize.org/docs/v6/getting-started/
@@ -24,3 +18,11 @@ module.exports = app;
 // 4) npx sequelize-cli init   (config,models,migrations,seeders)
 // 5) npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
 // 6) npx sequelize-cli model:generate --name Post --attributes title:string,description:string,user_id:string
+
+
+// type script
+
+// npm install --save-dev typescript ts-node @types/node
+// npx tsc --init
+
+

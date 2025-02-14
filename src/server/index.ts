@@ -1,12 +1,22 @@
-const dotenv = require('dotenv');
+const express = require('express');
+const cors = require('cors');
 
-dotenv.config();
+const app = express();
+import errorHandler from '../http/middleware/error-middleware';
+import userRoutes from '../routes/user-routes';
 
-const server = require('./src/server');
+//Middlewares
+app.use(express.json());
+app.use(cors())
 
-const PORT = process.env.PORT || 3001;
+//Routes
+app.use('/api', userRoutes);
+app.use(errorHandler)
 
-server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
+
+
+//module.exports = app; (require ile kullanım)
+export default app;
 
 
 // https://sequelize.org/docs/v6/getting-started/
