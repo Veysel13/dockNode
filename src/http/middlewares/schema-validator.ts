@@ -1,6 +1,9 @@
 const createError = require('http-errors')
 import { Request, Response, NextFunction } from "express";
 import schemas from '../request/schema'
+import { ValidationErrorItem } from "joi";
+import { RequestValidationError } from "../../errors/request-validation-error";
+import { FieldValidationError } from "express-validator";
 
 const validationOptions = {
   abortEarly: false,
@@ -19,7 +22,16 @@ const schemaValidator = (key:keyof typeof schemas, useJoiError = true) => {
     const { error, value } = schema.validate(req.body, validationOptions);
    
     if (error) {
-        throw createError(422, error)
+    
+      const formattedErrors = error.details.map((err: ValidationErrorItem) => ({
+        msg: err.message,
+        param: err.path.join("."),
+        location: "body",
+        value: err.context?.value,
+      }));
+
+
+      throw new RequestValidationError(formattedErrors);
     }
 
     return next();

@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import { Container } from "../../provider/repository-service-provider";
 import { IUserService } from "../../services/abstract/IUserService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
+import { BadRequestError } from "../../errors/bad-request-error";
 
 export class UserController {
     private userService: IUserService;
@@ -40,7 +41,7 @@ export class UserController {
      getUserById = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const user = await this.userService.findById(parseInt(req.params.id));
-            if(!user) errorResponse(res, 404, ['Not Found User']);
+            if(!user) throw new BadRequestError("Not Found User"); //errorResponse(res, 404, ['Not Found User']);
             successResponse(res, 200, 'User', [{user}]);
         } catch (error) {
             next(error)
@@ -67,4 +68,4 @@ export class UserController {
     }
 }
 
-export default UserController;
+export default new UserController();

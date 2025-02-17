@@ -1,22 +1,47 @@
 'use strict';
-import { Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
+import { sequelize } from '.';
 
+interface UserAttributes {
+  id: number;
+  name: string;
+  lastname: string;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
-module.exports = (sequelize:any, DataTypes:any) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  User.init({
-    name: DataTypes.STRING,
-    lastname: DataTypes.STRING,
-    email: DataTypes.STRING,
+interface UserCreationAttributes extends Optional<UserAttributes, "id" | "createdAt" | "updatedAt"> {}
+
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public id!: number;
+  public name!: string;
+  public lastname!: string;
+  public email!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'created_at',
@@ -26,11 +51,14 @@ module.exports = (sequelize:any, DataTypes:any) => {
       type: DataTypes.DATE,
       allowNull: false,
       field: 'updated_at',
-    },
-  }, {
+    }
+  },
+  {
     sequelize,
-    modelName: 'User',
-    tableName:'users'
-  });
-  return User;
-};
+    tableName: "users",
+    modelName: "User",
+    timestamps: true,
+  }
+);
+
+export default User;

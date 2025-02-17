@@ -1,18 +1,28 @@
 const express = require('express');
+import 'express-async-errors';
 const cors = require('cors');
 
 const app = express();
-import errorHandler from '../http/middleware/error-middleware';
+import errorHandler from '../http/middlewares/error-handler';
+import { NotFoundError } from '../errors/not-found-error';
+
+
 import userRoutes from '../routes/user-routes';
 
 //Middlewares
 app.use(express.json());
+app.set('trust proxy', true);
+app.use(express.urlencoded({extended:true}))
 app.use(cors())
 
 //Routes
 app.use('/api', userRoutes);
-app.use(errorHandler)
 
+app.all('*', async (req:any, res:any) => {
+    throw new NotFoundError();
+});
+
+app.use(errorHandler)
 
 
 //module.exports = app; (require ile kullanım)

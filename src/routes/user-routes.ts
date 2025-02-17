@@ -3,15 +3,13 @@ import UserController from '../http/controllers/user-controller';
 
 const router = express.Router();
 
-const userContollerInstance = new UserController();
 
-import schemaValidator from '../http/middleware/schema-validator'
+import schemaValidator from '../http/middlewares/schema-validator'
 
-
-router.post('/user',[schemaValidator('userRequest')], userContollerInstance.createUser);
-router.get('/user', userContollerInstance.getAllUser);
-router.get('/user/:id', userContollerInstance.getUserById);
-router.put('/user/:id', userContollerInstance.updateUser);
-router.delete('/user/:id', userContollerInstance.deleteUser);
+router.post('/user',[schemaValidator('userRequest')], UserController.createUser);
+router.get('/user', UserController.getAllUser);
+router.get('/user/:id', UserController.getUserById);
+router.put('/user/:id', UserController.updateUser);
+router.delete('/user/:id', UserController.deleteUser);
 
 export default router;
