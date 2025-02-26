@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from ".";
+import { sequelize } from "./sequelize";
 import User from "./user";
 
 interface PostAttributes {
@@ -22,7 +22,7 @@ class Post extends Model<PostAttributes, PostCreationAttributes> implements Post
   public readonly updatedAt!: Date;
 
   static associate() {
-    Post.belongsTo(User, { foreignKey: "user_id",targetKey:"id", as: "user" });
+  
   }
 }
 
@@ -67,5 +67,7 @@ Post.init(
     modelName: "Post",
   }
 );
+
+//Post.belongsTo(User, { foreignKey: 'userId', targetKey: 'id', as: 'users'});
 
 export default Post;

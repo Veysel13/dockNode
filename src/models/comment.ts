@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from ".";
+import { sequelize } from "./sequelize";
 import Post from "./post";
 
 interface CommentAttributes {
@@ -22,7 +22,7 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
   public readonly updatedAt!: Date;
 
   static associate() {
-    Comment.belongsTo(Post, { foreignKey: "post_id",targetKey:"id", as: "post" });
+    
   }
 }
 

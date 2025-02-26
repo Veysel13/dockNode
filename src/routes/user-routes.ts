@@ -6,10 +6,10 @@ const router = express.Router();
 
 import schemaValidator from '../http/middlewares/schema-validator'
 
-router.post('/user',[schemaValidator('userRequest')], UserController.createUser);
-router.get('/user', UserController.getAllUser);
-router.get('/user/:id', UserController.getUserById);
-router.put('/user/:id', UserController.updateUser);
-router.delete('/user/:id', UserController.deleteUser);
+router.post('/user',[schemaValidator('userRequest')], UserController.create);
+router.get('/user', UserController.getAll);
+router.get('/user/:id', UserController.find);
+router.put('/user/:id', UserController.update);
+router.delete('/user/:id', UserController.delete);
 
 export default router;

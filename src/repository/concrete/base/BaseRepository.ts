@@ -1,5 +1,7 @@
+import User from "../../../models/user";
+
 export abstract class BaseRepository<T> {
-    protected model: any; // Sequelize modeli burada tutulacak
+    protected model: any;
 
     constructor(model: any) {
         this.model = model;
@@ -9,11 +11,11 @@ export abstract class BaseRepository<T> {
         return await this.model.findByPk(id);
     }
 
-    async findAll(): Promise<T[]> {
+    async get(): Promise<T[]> {
         return await this.model.findAll();
     }
 
-    async create(data: Partial<T>): Promise<T> {
+    async create(data: Partial<T>): Promise<User> {
         return await this.model.create(data);
     }
 

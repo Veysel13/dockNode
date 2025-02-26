@@ -1,10 +1,16 @@
-import { Sequelize } from 'sequelize';
+import { sequelize } from "./sequelize";
+import User from "./user";
+import Post from "./post";
+import Comment from "./comment";
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.js')[env];
+User.hasMany(Post, { foreignKey: "userId", as: "posts" });
 
-const  sequelize = config.url
-  ? new Sequelize(config.url, config)
-  : new Sequelize(config.database, config.username, config.password, config);
+Post.belongsTo(User, { foreignKey: 'userId', targetKey: 'id', as: 'user'});
+Post.hasMany(Comment, { foreignKey: "postId", as: "comments" });
 
-export { Sequelize, sequelize };
+Comment.belongsTo(Post, { foreignKey: 'postId', targetKey: 'id', as: 'post'});
+
+
+sequelize.sync()
+  .then(() => console.log("Database & tables synced!"))
+  .catch(err => console.error("Database sync error:", err));

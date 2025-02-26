@@ -13,7 +13,7 @@ export class UserController {
       this.userService = Container.resolve<IUserService>("UserService");
     }
 
-     createUser = async (req:Request, res: Response, next:NextFunction) => {
+     create = async (req:Request, res: Response, next:NextFunction) => {
         try {        
             const {name, lastname, email} = req.body
             const userData = {
@@ -29,16 +29,16 @@ export class UserController {
         }
     }
 
-     getAllUser = async (req:Request, res: Response, next:NextFunction) => {
+    getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const user = await this.userService.findAll()
+            const user = await this.userService.get()
             successResponse(res, 200, 'Get user', [{user}]);
         } catch (error) {        
             next('user not found')
         }
     }
 
-     getUserById = async (req:Request, res: Response, next:NextFunction) => {
+     find = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const user = await this.userService.findById(parseInt(req.params.id));
             if(!user) throw new BadRequestError("Not Found User"); //errorResponse(res, 404, ['Not Found User']);
@@ -48,7 +48,7 @@ export class UserController {
         }
     }
 
-     updateUser = async (req:Request, res: Response, next:NextFunction) => {
+     update = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const {name, email} = req.body
             const user = await this.userService.update(parseInt(req.params.id), req.body);
@@ -58,10 +58,10 @@ export class UserController {
         }
     }
 
-     deleteUser = async (req:Request, res: Response, next:NextFunction) => {
+     delete = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const user = await this.userService.delete(parseInt(req.params.id));
-            successResponse(res, 200, 'Deleted user', [{user}]);
+            successResponse(res, 200, 'Deleted user', []);
         } catch (error) {
             next(error)
         }

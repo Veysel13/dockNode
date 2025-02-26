@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 import server from './src/server/index';
+
+if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+}
 
 const PORT = process.env.PORT || 3001;
 
