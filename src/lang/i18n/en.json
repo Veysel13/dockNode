@@ -1,0 +1,12 @@
+{
+	"errors":{
+		"maintance":"Maintance",
+		"email_exist":"Email in use",
+		"invalid_credential":"Invalid credentials"
+	},
+	"greeting": "Hello, world!",
+	"user": {
+	  "welcome": "Welcome, {{name}}!"
+	}
+  }
+  

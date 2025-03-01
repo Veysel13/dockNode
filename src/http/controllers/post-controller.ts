@@ -4,6 +4,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { IPostService } from "../../services/abstract/IPostService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
+import sendToQueue from "../../rabbitmq/producer";
 
 export class PostController {
     private postService: IPostService;
@@ -14,8 +15,12 @@ export class PostController {
 
      create = async (req:Request, res: Response, next:NextFunction) => {
         try {        
-            req.body.userId = 1; 
+            req.body.userId = req.currentUser?.id; 
+
             const post = await this.postService.create(req.body);
+
+            await sendToQueue('post_queue', req.body);
+
             successResponse(res, 201, 'Created post', [{post}]);
         } catch (error) {
             next(error)
@@ -33,8 +38,9 @@ export class PostController {
 
      find = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const post = await this.postService.findById(parseInt(req.params.id));
+            const post = await this.postService.findById(parseInt(req.params.id), true);
             if(!post) throw new BadRequestError("Not Found Post"); //errorResponse(res, 404, ['Not Found User']);
+
             successResponse(res, 200, 'Post', [{post}]);
         } catch (error) {
             next(error)

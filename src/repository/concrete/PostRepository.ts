@@ -38,4 +38,14 @@ export class PostRepository extends BaseRepository<any> implements IPostReposito
         });
     }
 
+    async findById(id: number, withRelation?: boolean): Promise<any> {
+    
+        if (withRelation) {
+            return  await this.model.findByPk(id, {
+              include: [{ model: User, as: "user" }],
+            });
+          }
+          return await this.model.findByPk(id);
+    }
+
 }

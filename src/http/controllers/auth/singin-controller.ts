@@ -18,13 +18,13 @@ class SigninController {
 
     const existingUser = await this.userService.findByEmail(email, ['withPassword']);
     if (!existingUser) {
-      throw new BadRequestError("Invalid credentials");
+      throw new BadRequestError(res.__('errors.invalid_credential'));
     }
 
 
     const passwordsMatch = await Password.compare(existingUser.password, password);
     if (!passwordsMatch) {
-      throw new BadRequestError("Invalid Credentials");
+      throw new BadRequestError(res.__('errors.invalid_credential'));
     }
 
     const userJwt = await existingUser.generateToken()

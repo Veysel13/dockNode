@@ -1,0 +1,11 @@
+{
+	"errors":{
+		"maintance":"Bakım modundayız",
+		"email_exist":"Email zaten var"
+	},
+	"greeting": "Merhaba, dünya!",
+	"user": {
+	  "welcome": "Hoş geldin, {{name}}!"
+	}
+  }
+  

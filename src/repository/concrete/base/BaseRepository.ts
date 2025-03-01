@@ -7,7 +7,7 @@ export abstract class BaseRepository<T> {
         this.model = model;
     }
 
-    async findById(id: number): Promise<T | null> {
+    async findById(id: number,  withRelation: boolean = false): Promise<T | null> {
         return await this.model.findByPk(id);
     }
 

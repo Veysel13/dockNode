@@ -5,6 +5,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { ICommentService } from "../../services/abstract/ICommentService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
+import sendToQueue from "../../rabbitmq/producer";
 
 export class CommentController {
     private commentService: ICommentService;
@@ -18,6 +19,9 @@ export class CommentController {
             const {name, lastname, email} = req.body
         
             const comment = await this.commentService.create(req.body);
+            
+            await sendToQueue('comment_queue', req.body);
+            
             successResponse(res, 201, 'Created comment', [{comment}]);
         } catch (error) {
             next(error)

@@ -17,7 +17,7 @@ class SignupController {
 
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
-      throw new BadRequestError("Email in use");
+      throw new BadRequestError(res.__('errors.email_exist'));
     }
 
     const createUser = await this.userService.create({ name, lastname, email, password });

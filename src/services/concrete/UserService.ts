@@ -11,8 +11,8 @@ export class UserService<T> implements IUserService {
       this.userRepository = Container.resolve<IUserRepository>("UserRepository");
     }
 
-    async findById(id: number): Promise<User | null> {
-        return await this.userRepository.findById(id);
+    async findById(id: number, withRelation:boolean = false): Promise<User | null> {
+        return await this.userRepository.findById(id, withRelation);
     }
 
     async get(): Promise<User[] | null> {

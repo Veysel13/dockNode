@@ -1,0 +1,111 @@
+services:
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_DATABASE
+    ports:
+      - $DB_LOCAL_PORT:$DB_PORT
+    volumes:
+      - db:/var/lib/postgres
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  consumer:
+    depends_on:
+      - postgresdb
+      - rabbitmq
+    build: ./
+    restart: unless-stopped
+    env_file: ./.env
+    command: ["npx", "ts-node", "src/rabbitmq/consumer.ts"]
+    environment:
+      - DB_HOST=postgresdb
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_DATABASE
+      - DB_PORT=$DB_PORT
+      - RABBITMQ_URL=$RABBITMQ_URL
+    stdin_open: true
+    tty: true
+  app:
+    depends_on:
+      - postgresdb
+      - rabbitmq
+    build: ./
+    command: sh -c "npm run migrate && npm start"
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - DB_HOST=postgresdb
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_DATABASE
+      - DB_PORT=$DB_PORT
+      - RABBITMQ_URL=$RABBITMQ_URL
+    stdin_open: true
+    tty: true
+
+volumes: 
+  db:
+  rabbitmq_data:
+
+
+
+#docker compose down -v        # Tüm container'ları ve volume'leri temizle
+#docker compose up --build -d  # Arka planda çalıştırmak ve terminali serbest bırakmak için:
+#docker compose up --build     # Hata ayıklamak veya anlık logları görmek için
+#docker ps                     # containerları listeler
+
+#Eğer down yapmak istiyorsan ama verileri kaybetmek istemiyorsan:
+#docker compose down
+#docker compose up --build -d
+
+#O zaman gerçekten tüm verileri sıfırlamak için -v kullanabilirsin:
+#docker compose down -v
+#docker compose up --build -d
+
+#Ywni paket yükleme
+#npm install axios
+#docker compose exec app npm install  #Docker İçinde Güncellemek için (Hızlı Yöntem)
+#docker compose up --build -d         #Tüm Container'ı Yeniden Oluşturma (Daha Temiz Yöntem)
+
+#--- Sorun Yaşarsan: Eski node_modules ve Cache'i Temizle
+#docker compose down
+#docker compose build --no-cache
+#docker compose up -d
+
+#Özettt
+# Küçük değişiklikler için: docker compose exec app npm install
+# Büyük değişiklikler için: docker compose up --build -d
+# Tam temizlik için: docker compose down && docker compose build --no-cache && docker compose up -d
+
+
+#Docker Container içinde Manuel Migration veya başka komut çalıştırmak Çalıştırmak
+#docker compose exec app npm run migrate
+#docker compose exec app npm install
+
+
+
+#Ne zaman build yapmalısın?
+#Dockerfile değiştiyse (örneğin yeni bir paket eklendi, çalışma dizini değişti vs.)
+#Yeni bir bağımlılık eklendiyse (package.json değiştiyse)
+#Bu durumda şu komutu çalıştırmalısın:
+#docker compose up --build -d
+
+
+

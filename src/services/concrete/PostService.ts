@@ -11,8 +11,8 @@ export class PostService<T> implements IPostService {
       this.postRepository = Container.resolve<IPostRepository>("PostRepository");
     }
 
-    async findById(id: number): Promise<Post | null> {
-        return await this.postRepository.findById(id);
+    async findById(id: number, withRelation = false): Promise<Post | null> {
+        return await this.postRepository.findById(id, withRelation);
     }
 
     async get(): Promise<Post[] | null> {

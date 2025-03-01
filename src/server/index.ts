@@ -1,15 +1,34 @@
 const express = require('express');
+import {Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 const cors = require('cors');
 require('../models/index.ts')
+import path from 'path';
+import i18n from '../config/i18n';
 
 import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+
+// i18n init
+app.use(i18n.init);
+app.use(function (req:Request, res:Response, next:NextFunction) {
+    if (req.header('lang') && req.header('lang') != i18n.getLocale()){
+        i18n.setLocale(req, req.header('lang'))
+    } 
+    next()
+});
+// i18n init
+
+app.use(express.static(path.join(__dirname, '../src/public')))
+app.use(express.json({ limit: "50mb" }))
+app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }))
+
 import errorHandler from '../http/middlewares/error-handler';
 import { NotFoundError } from '../errors/not-found-error';
+import maintance from '../http/middlewares/maintance';
 
 import signUpRoutes from '../routes/auth/signup';
 import signInRoutes from '../routes/auth/signin';
@@ -19,6 +38,7 @@ import commentRoutes from '../routes/comment-routes';
 
 
 //Middlewares
+
 //app.use(express.json());
 app.use(json());
 app.set('trust proxy', true);
@@ -26,6 +46,10 @@ app.use(express.urlencoded({extended:true}))
 app.use(cors())
 
 //Routes
+
+//Maintance
+app.use(maintance)
+
 app.use('/api', signUpRoutes);
 app.use('/api', signInRoutes)
 app.use('/api', userRoutes);

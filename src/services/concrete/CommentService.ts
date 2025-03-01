@@ -11,8 +11,8 @@ export class CommentService<T> implements ICommentService {
       this.commentRepository = Container.resolve<ICommentRepository>("CommentRepository");
     }
 
-    async findById(id: number): Promise<Comment | null> {
-        return await this.commentRepository.findById(id);
+    async findById(id: number, withRelation: boolean = false): Promise<Comment | null> {
+        return await this.commentRepository.findById(id, withRelation);
     }
 
     async get(): Promise<Comment[] | null> {
