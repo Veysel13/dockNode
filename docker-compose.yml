@@ -45,7 +45,11 @@ services:
       - postgresdb
       - rabbitmq
     build: ./
-    command: sh -c "npm run migrate && npm start"
+    volumes:
+      - .:/src
+      - /src/node_modules
+    working_dir: /src
+    command: sh -c "npm run migrate && npm run dev"
     restart: unless-stopped
     env_file: ./.env
     ports:
@@ -65,10 +69,11 @@ volumes:
   rabbitmq_data:
 
 
-
 #docker compose down -v        # Tüm container'ları ve volume'leri temizle
 #docker compose up --build -d  # Arka planda çalıştırmak ve terminali serbest bırakmak için:
 #docker compose up --build     # Hata ayıklamak veya anlık logları görmek için
+#docker compose restart app    #Kod değişiklikleri yaptığında tekrar build etmen gerekmez,Artık kod değiştirince Nodemon otomatik algılayacak ve Docker içinde tekrar başlatacak
+#docker compose up             #nodemon ve volumes ayarlamalarında değişikliklerde kısa kodu çalıştırabilir
 #docker ps                     # containerları listeler
 
 #Eğer down yapmak istiyorsan ama verileri kaybetmek istemiyorsan:
@@ -98,7 +103,6 @@ volumes:
 #Docker Container içinde Manuel Migration veya başka komut çalıştırmak Çalıştırmak
 #docker compose exec app npm run migrate
 #docker compose exec app npm install
-
 
 
 #Ne zaman build yapmalısın?

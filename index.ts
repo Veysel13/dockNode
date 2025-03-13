@@ -9,12 +9,8 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
-//Docker
+//Permisson and role system
 //Redis
-
-// docker compose up
-// docker compose up -d 
-// docker compose down
 
 // https://sequelize.org/docs/v6/getting-started/
 

@@ -62,7 +62,6 @@ app.all('*', async (req:any, res:any) => {
 
 app.use(errorHandler)
 
-//module.exports = app; (require ile kullanım)
 export default app;
 
 // https://sequelize.org/docs/v6/getting-started/
