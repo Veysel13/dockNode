@@ -1,20 +1,18 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "./sequelize";
 
-interface TeamAttributes {
+interface PermissionAttributes {
   id: number;
   name: string;
-  description: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-interface TeamCreationAttributes extends Optional<TeamAttributes,  "id" | "createdAt" | "updatedAt"> {}
+interface PermissionCreationAttributes extends Optional<PermissionAttributes,  "id" | "createdAt" | "updatedAt"> {}
 
-class Team extends Model<TeamAttributes, TeamCreationAttributes> implements TeamAttributes {
+class Permission extends Model<PermissionAttributes, PermissionCreationAttributes> implements PermissionAttributes {
   public id!: number;
   public name!: string;
-  public description!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
@@ -23,7 +21,7 @@ class Team extends Model<TeamAttributes, TeamCreationAttributes> implements Team
   }
 }
 
-Team.init(
+Permission.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -31,10 +29,6 @@ Team.init(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -51,10 +45,9 @@ Team.init(
   },
   {
     sequelize,
-    tableName: "teams",
-    modelName: "Team",
+    tableName: "permissions",
+    modelName: "Permission",
   }
 );
 
-
-export default Team;
+export default Permission;

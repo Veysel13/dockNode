@@ -19,6 +19,10 @@ export class UserService<T> implements IUserService {
         return await this.userRepository.getWithRelation()
     }
 
+    async getRoleWithPermissions(id:number): Promise<User | null> {
+        return await this.userRepository.getRoleWithPermissions(id)
+    }
+
     async findByEmail(email:string, scopes: string[] = []): Promise<User | null> {
         return await this.userRepository.findByEmail(email, scopes);
     }

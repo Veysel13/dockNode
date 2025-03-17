@@ -1,29 +1,32 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, HasManyGetAssociationsMixin } from "sequelize";
 import { sequelize } from "./sequelize";
+import Permission from "./permission";
 
-interface TeamAttributes {
+interface RoleAttributes {
   id: number;
   name: string;
-  description: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-interface TeamCreationAttributes extends Optional<TeamAttributes,  "id" | "createdAt" | "updatedAt"> {}
+interface RoleCreationAttributes extends Optional<RoleAttributes,  "id" | "createdAt" | "updatedAt"> {}
 
-class Team extends Model<TeamAttributes, TeamCreationAttributes> implements TeamAttributes {
+class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
   public id!: number;
   public name!: string;
-  public description!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  public permissions?: Permission[];
+
+  public getPermissions!: HasManyGetAssociationsMixin<Permission>;
 
   static associate() {
   
   }
 }
 
-Team.init(
+Role.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -31,10 +34,6 @@ Team.init(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -51,10 +50,10 @@ Team.init(
   },
   {
     sequelize,
-    tableName: "teams",
-    modelName: "Team",
+    tableName: "roles",
+    modelName: "Role",
   }
 );
 
 
-export default Team;
+export default Role;

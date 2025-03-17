@@ -3,6 +3,9 @@ import { BaseRepository } from "./base/BaseRepository";
 import User from "../../models/user";
 import Post from "../../models/post";
 import Comment from "../../models/comment";
+import Permission from "../../models/permission";
+import Role from "../../models/role";
+import { cacheRemember } from "../../helpers/cache";
 
 
 export class UserRepository<T> extends BaseRepository<any> implements IUserRepository {
@@ -28,6 +31,23 @@ export class UserRepository<T> extends BaseRepository<any> implements IUserRepos
           }
         ],
         order: [["id", "DESC"]],
+      });
+    }
+
+    async getRoleWithPermissions(id:number): Promise<User | null> {
+
+      return await cacheRemember(`user_roles_permissions:${id}`, 300, async () => {
+        return await User.findByPk(id, {
+          include: [
+            { model: Permission, as: "permissions", required: false },
+            { 
+              model: Role, 
+              as: "roles",
+              required: false,
+              include: [{ model: Permission, as: "permissions", required: false }]
+            }
+          ],
+        });
       });
     }
 

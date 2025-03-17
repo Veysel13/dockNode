@@ -1,7 +1,9 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional, HasManyGetAssociationsMixin } from 'sequelize';
 import { sequelize } from './sequelize';
 import jwt from "jsonwebtoken";
 import { Password } from '../helpers/password';
+import Permission from './permission';
+import Role from './role';
 
 interface UserAttributes {
   id: number;
@@ -23,6 +25,14 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public password!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // İlişkili alanları burada tanımlıyoruz
+  public permissions?: Permission[];
+  public roles?: Role[];
+
+  // Sequelize ilişki metodları
+  public getPermissions!: HasManyGetAssociationsMixin<Permission>;
+  public getRoles!: HasManyGetAssociationsMixin<Role>;
 
   public generateToken(): string {
     return jwt.sign(
