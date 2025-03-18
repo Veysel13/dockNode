@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
-//Permisson and role system
-//Redis
+//GraphQl
+//
 
 // https://sequelize.org/docs/v6/getting-started/
 
@@ -21,7 +21,6 @@ server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 // 4) npx sequelize-cli init   (config,models,migrations,seeders)
 // 5) npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
 // 6) npx sequelize-cli model:generate --name Post --attributes title:string,description:string,user_id:string
-
 
 // type script
 

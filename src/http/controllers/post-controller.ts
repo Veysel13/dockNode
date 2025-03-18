@@ -4,7 +4,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { IPostService } from "../../services/abstract/IPostService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
-import sendToQueue from "../../rabbitmq/producer";
+import sendToQueue from "../../config/rabbitmq/producer";
 
 export class PostController {
     private postService: IPostService;

@@ -1,12 +1,14 @@
 'use strict'
 
+import { Request } from "express";
+
 const path = require('path')
 const requestIp = require('request-ip')
 const validUrl = require('valid-url');
 
 class Util {
 
-    static useModel(model) {
+    static useModel(model:string) {
 
         const models = [
             {
@@ -104,12 +106,12 @@ class Util {
 
         const found = models.find(element => element.model == model)
 
-        const filePath = require(path.join(__dirname, found.path))
+        const filePath = require(path.join(__dirname, found?.path))
 
         return filePath
     }
 
-    static useLibraries(model) {
+    static useLibraries(model:string) {
 
         const libraries = [
             {
@@ -124,12 +126,12 @@ class Util {
 
         const found = libraries.find(element => element.model == model);
 
-        const filePath = require(path.join(__dirname, found.path))
+        const filePath = require(path.join(__dirname, found?.path))
 
         return filePath;
     }
 
-    static useRepository(model) {
+    static useRepository(model:string) {
 
         const libraries = [
             {
@@ -191,12 +193,12 @@ class Util {
 
         const found = libraries.find(element => element.model == model);
 
-        const filePath = require(path.join(__dirname, found.path))
+        const filePath = require(path.join(__dirname, found?.path))
 
         return filePath;
     }
 
-    static constants(model) {
+    static constants(model:string) {
 
         const libraries = [
             {
@@ -211,7 +213,7 @@ class Util {
 
         const found = libraries.find(element => element.model == model);
 
-        const filePath = require(path.join(__dirname, found.path))
+        const filePath = require(path.join(__dirname, found?.path))
 
         return filePath;
     }
@@ -233,12 +235,12 @@ class Util {
         return verificationCode
     }
 
-    static getIP(req){
+    static getIP(req:Request){
         
       return  requestIp.getClientIp(req)
     }
 
-    static isValidUrl(url){
+    static isValidUrl(url:string){
         if (validUrl.isUri(url) && (url.includes('http://') || url.includes('https://'))){
             return true;
         }else {

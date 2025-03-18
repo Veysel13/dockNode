@@ -10,7 +10,9 @@ services:
     ports:
       - $DB_LOCAL_PORT:$DB_PORT
     volumes:
-      - db:/var/lib/postgres
+      - db:/var/lib/postgresql/data
+    networks:
+      - my_network
   redis:
     image: redis:latest
     container_name: redis_cache
@@ -20,6 +22,17 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
+    networks:
+      - my_network
+  memcached:
+    image: memcached:latest
+    container_name: memcached
+    restart: always
+    ports:
+      - "11211:11211"
+    command: memcached -m 64
+    networks:
+      - my_network
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -32,6 +45,8 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - my_network
   consumer:
     depends_on:
       - postgresdb
@@ -39,7 +54,7 @@ services:
     build: ./
     restart: unless-stopped
     env_file: ./.env
-    command: ["npx", "ts-node", "src/rabbitmq/consumer.ts"]
+    command: ["npx", "ts-node", "src/config/rabbitmq/consumer.ts"]
     environment:
       - DB_HOST=postgresdb
       - DB_USER=$DB_USER
@@ -47,12 +62,17 @@ services:
       - DB_NAME=$DB_DATABASE
       - DB_PORT=$DB_PORT
       - RABBITMQ_URL=$RABBITMQ_URL
+    networks:
+      - my_network
     stdin_open: true
     tty: true
   app:
     depends_on:
       - postgresdb
       - rabbitmq
+      - memcached
+    networks:
+      - my_network
     build: ./
     volumes:
       - .:/src
@@ -62,22 +82,26 @@ services:
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      - "${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}"
     environment:
-      - DB_HOST=postgresdb
-      - DB_USER=$DB_USER
-      - DB_PASSWORD=$DB_PASSWORD
-      - DB_NAME=$DB_DATABASE
-      - DB_PORT=$DB_PORT
-      - RABBITMQ_URL=$RABBITMQ_URL
+      DB_HOST: postgresdb
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_NAME: "${DB_DATABASE}"
+      DB_PORT: "${DB_PORT}"
+      RABBITMQ_URL: "${RABBITMQ_URL}"
+      MEMCACHED_HOST: "memcached"
     stdin_open: true
     tty: true
+
+networks:
+  my_network:
+    driver: bridge
 
 volumes: 
   db:
   rabbitmq_data:
   redis_data:
-
 
 #docker compose down -v        # Tüm container'ları ve volume'leri temizle
 #docker compose up --build -d  # Arka planda çalıştırmak ve terminali serbest bırakmak için:
@@ -113,7 +137,6 @@ volumes:
 #Docker Container içinde Manuel Migration veya başka komut çalıştırmak Çalıştırmak
 #docker compose exec app npm run migrate
 #docker compose exec app npm install
-
 
 #Ne zaman build yapmalısın?
 #Dockerfile değiştiyse (örneğin yeni bir paket eklendi, çalışma dizini değişti vs.)

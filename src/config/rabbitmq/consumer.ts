@@ -1,19 +1,18 @@
 import amqp from "amqplib";
 import fs from "fs";
 import path from "path";
-import { BaseJob } from "../jobs/BaseJob";
+import { BaseJob } from "../../jobs/BaseJob";
 
 const WORKER_COUNT = 3;
 const RABBITMQ_URL:string = process.env.RABBITMQ_URL || "amqp://localhost"
 
-
 async function loadJobs(): Promise<BaseJob[]> {
     const jobs: BaseJob[] = [];
-    const jobFiles = fs.readdirSync(path.join(__dirname, "../jobs"));
+    const jobFiles = fs.readdirSync(path.join(__dirname, "../../jobs"));
   
     for (const file of jobFiles) {
       if (file !== "BaseJob.ts" && file.endsWith(".ts")) {
-        const jobModule = await import(`../jobs/${file.replace(".ts", "")}`);
+        const jobModule = await import(`../../jobs/${file.replace(".ts", "")}`);
         const JobClass = Object.values(jobModule)[0] as { new (): BaseJob };  
         jobs.push(new JobClass());
       }

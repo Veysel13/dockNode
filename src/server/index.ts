@@ -22,7 +22,7 @@ app.use(function (req:Request, res:Response, next:NextFunction) {
 });
 // i18n init
 
-app.use(express.static(path.join(__dirname, '../src/public')))
+app.use(express.static(path.join(__dirname, '../src/storage/uploads')))
 app.use(express.json({ limit: "50mb" }))
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }))
 

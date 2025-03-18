@@ -5,7 +5,7 @@ import Post from "../../models/post";
 import Comment from "../../models/comment";
 import Permission from "../../models/permission";
 import Role from "../../models/role";
-import { cacheRemember } from "../../helpers/cache";
+import { cache } from "../../cache/CacheManager";
 
 
 export class UserRepository<T> extends BaseRepository<any> implements IUserRepository {
@@ -36,7 +36,7 @@ export class UserRepository<T> extends BaseRepository<any> implements IUserRepos
 
     async getRoleWithPermissions(id:number): Promise<User | null> {
 
-      return await cacheRemember(`user_roles_permissions:${id}`, 300, async () => {
+      return await cache.remember(`user_roles_permissions:${id}`, 10, async () => {
         return await User.findByPk(id, {
           include: [
             { model: Permission, as: "permissions", required: false },
@@ -49,6 +49,7 @@ export class UserRepository<T> extends BaseRepository<any> implements IUserRepos
           ],
         });
       });
+
     }
 
     async findByEmail(email:string, scopes: string[] = []): Promise<User | null>  {
