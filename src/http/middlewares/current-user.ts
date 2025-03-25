@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../../models/user';
 import { IUserService } from '../../services/abstract/IUserService';
 import { Container } from '../../provider/repository-service-provider';
 
@@ -30,14 +29,15 @@ export const currentUser = async (req: Request, res: Response, next: NextFunctio
     const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
 
     const userService:IUserService = Container.resolve<IUserService>("UserService");
-
+    
     const user=await userService.findById(payload.id)
     if(user){
       req.currentUser = payload;
     }
+    
+  } catch (err) {
+    console.error("JWT verification failed:", err);
+  }
 
-    return next();
-  } catch (err) {}
-
-  next();
+  return next();
 };

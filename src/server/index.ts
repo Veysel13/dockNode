@@ -6,6 +6,8 @@ const cors = require('cors');
 require('../models/index.ts')
 import path from 'path';
 import i18n from '../config/i18n';
+import { graphqlHTTP } from "express-graphql";
+import schema from "../graphql/schema";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -55,6 +57,22 @@ app.use('/api', signInRoutes)
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
+
+/*app.use("/graphql", graphqlHTTP({ 
+    schema,
+    graphiql: true,
+    context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
+}));
+*/
+
+app.use(
+    "/graphql",
+    graphqlHTTP((req, res) => ({
+      schema,
+      graphiql: true,
+      context: { req, res }, // Burada req ve res context'e ekleniyor
+    }))
+  );
 
 app.all('*', async (req:any, res:any) => {
     throw new NotFoundError();

@@ -25,11 +25,14 @@
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dataloader": "^2.2.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
+    "express-graphql": "^0.12.0",
     "express-validator": "^7.2.1",
     "fs": "^0.0.1-security",
+    "graphql": "^16.10.0",
     "http-errors": "^2.0.0",
     "i18n": "^0.15.1",
     "ioredis": "^5.6.0",
@@ -40,8 +43,10 @@
     "path": "^0.12.7",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
+    "request-ip": "^3.3.0",
     "sequelize": "^6.37.5",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.6",

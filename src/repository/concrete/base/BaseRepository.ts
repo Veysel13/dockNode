@@ -11,7 +11,7 @@ export abstract class BaseRepository<T> {
         return await this.model.findByPk(id);
     }
 
-    async get(): Promise<T[]> {
+    async all(): Promise<T[]> {
         return await this.model.findAll();
     }
 

@@ -15,8 +15,12 @@ export class UserService<T> implements IUserService {
         return await this.userRepository.findById(id, withRelation);
     }
 
-    async get(): Promise<User[] | null> {
-        return await this.userRepository.getWithRelation()
+    async get(filters: { ids?: number[], email?: string, otherField?: any }, attributes?: string[]): Promise<User[] | null> {
+        return await this.userRepository.get(filters, attributes)
+    }
+
+    async all(): Promise<User[] | null> {
+        return await this.userRepository.all()
     }
 
     async getRoleWithPermissions(id:number): Promise<User | null> {

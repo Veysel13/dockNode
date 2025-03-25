@@ -15,8 +15,12 @@ export class PostService<T> implements IPostService {
         return await this.postRepository.findById(id, withRelation);
     }
 
-    async get(): Promise<Post[] | null> {
-        return await this.postRepository.getWithRelation();
+    async get(filters: {ids?: number[], userIds?: number[], userId?: number, title?: string }, attributes?: string[]): Promise<Post[] | null>{
+        return await this.postRepository.get(filters, attributes);
+    }
+
+    async all(): Promise<Post[] | null> {
+        return await this.postRepository.all();
     }
 
     async create(data: Partial<T>): Promise<T> {

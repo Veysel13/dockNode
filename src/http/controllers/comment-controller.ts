@@ -30,7 +30,7 @@ export class CommentController {
 
      getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const comment = await this.commentService.get()
+            const comment = await this.commentService.all()
             successResponse(res, 200, 'Get comment', [{comment}]);
         } catch (error) {        
             next('comment not found')

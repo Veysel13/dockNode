@@ -6,12 +6,34 @@ import Comment from "../../models/comment";
 import Permission from "../../models/permission";
 import Role from "../../models/role";
 import { cache } from "../../cache/CacheManager";
+import { Op } from "sequelize";
 
 
 export class UserRepository<T> extends BaseRepository<any> implements IUserRepository {
   
     constructor() {
         super(User);
+    }
+
+    async get(filters: { ids?: number[], email?: string, otherField?: any }, attributes?: string[]): Promise<User[] | null> {
+      const whereClause: any = {};
+  
+      if (filters.ids) {
+        whereClause.id = { [Op.in]: filters.ids.map(Number) };
+      }
+  
+      if (filters.email) {
+        whereClause.email = filters.email;
+      }
+  
+      if (filters.otherField) {
+        whereClause.otherField = filters.otherField;
+      }
+  
+      return await this.model.findAll({
+        attributes,
+        where: whereClause
+      });
     }
 
     async getWithRelation(): Promise<User[] | null> {

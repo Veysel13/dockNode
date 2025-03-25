@@ -3,13 +3,38 @@ import { BaseRepository } from "./base/BaseRepository";
 import Post from "../../models/post";
 import User from "../../models/user";
 import Comment from "../../models/comment";
-import { Sequelize } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 
-export class PostRepository extends BaseRepository<any> implements IPostRepository {
+export class PostRepository<T> extends BaseRepository<any> implements IPostRepository {
   
     constructor() {
         super(Post);
+    }
+
+    async get(filters: {ids?: number[], userIds?: number[], userId?:number, title?: string }, attributes?: string[]): Promise<Post[] | null> {
+        const whereClause: any = {};
+    
+        if (filters.ids) {
+          whereClause.id = { [Op.in]: filters.ids };
+        }
+
+        if (filters.userIds) {
+            whereClause.userId = { [Op.in]: filters.userIds };
+          }
+
+        if (filters.userId) {
+            whereClause.userId = filters.userId;
+          }
+    
+        if (filters.title) {
+          whereClause.title = filters.title;
+        }
+    
+        return await this.model.findAll({
+          attributes,
+          where: whereClause
+        });
     }
 
     async getWithRelation(): Promise<Post[] | null>  {

@@ -3,7 +3,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { ICommentRepository } from "../../repository/abstract/ICommentRepository";
 import { ICommentService } from "../abstract/ICommentService";
 
-export class CommentService<T> implements ICommentService {
+export class CommentService<T> implements ICommentService{
   
     private commentRepository: ICommentRepository;
   
@@ -15,8 +15,12 @@ export class CommentService<T> implements ICommentService {
         return await this.commentRepository.findById(id, withRelation);
     }
 
-    async get(): Promise<Comment[] | null> {
-        return await this.commentRepository.getWithRelation();
+    async get(filters: { postIds?: number[] }, attributes?: string[]): Promise<Comment[] | null> {
+        return await this.commentRepository.get(filters, attributes);
+    }
+
+    async all(): Promise<Comment[] | null> {
+        return await this.commentRepository.all();
     }
 
     async create(data: Partial<T>): Promise<T> {

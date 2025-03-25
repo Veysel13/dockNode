@@ -29,7 +29,7 @@ export class PostController {
 
      getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const post = await this.postService.get()
+            const post = await this.postService.all()
             successResponse(res, 200, 'Get post', [{post}]);
         } catch (error) { 
             next('Post not found')

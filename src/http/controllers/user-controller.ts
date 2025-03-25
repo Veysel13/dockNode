@@ -33,7 +33,7 @@ export class UserController {
 
     getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const user = await this.userService.get()
+            const user = await this.userService.all()
             successResponse(res, 200, 'Get user', [{user}]);
         } catch (error) {        
             next('user not found')
