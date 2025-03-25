@@ -10,6 +10,7 @@ server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
 //GraphQl
+//post image colomn ekle
 
 
 // https://sequelize.org/docs/v6/getting-started/
