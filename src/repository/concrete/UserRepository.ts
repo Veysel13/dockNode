@@ -5,7 +5,7 @@ import Post from "../../models/post";
 import Comment from "../../models/comment";
 import Permission from "../../models/permission";
 import Role from "../../models/role";
-import { cache } from "../../cache/CacheManager";
+import { cache } from "../../lib/cache/CacheManager";
 import { Op } from "sequelize";
 
 

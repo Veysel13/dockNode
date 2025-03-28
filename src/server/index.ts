@@ -37,8 +37,7 @@ import signInRoutes from '../routes/auth/signin';
 import userRoutes from '../routes/user-routes';
 import postRoutes from '../routes/post-routes';
 import commentRoutes from '../routes/comment-routes';
-import { NotAuthorizedError } from '../errors/not-authorized-error';
-import { GraphqlNotAuthorizedError } from '../graphql/graphql-error';
+import { logMiddleware } from '../http/middlewares/request-log';
 
 
 //Middlewares
@@ -48,6 +47,8 @@ app.use(json());
 app.set('trust proxy', true);
 app.use(express.urlencoded({extended:true}))
 app.use(cors())
+
+//app.use(logMiddleware);
 
 //Routes
 

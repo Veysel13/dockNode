@@ -5,7 +5,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { ICommentService } from "../../services/abstract/ICommentService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
-import sendToQueue from "../../config/rabbitmq/producer";
+import sendToQueue from "../../lib/rabbitmq/producer";
 
 export class CommentController {
     private commentService: ICommentService;
