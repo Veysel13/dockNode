@@ -2,9 +2,9 @@ import { GraphQLString, GraphQLInt } from "graphql";
 import { CommentType } from "../types/commentType";
 import { ICommentService } from "../../services/abstract/ICommentService";
 import { Container } from "../../provider/repository-service-provider";
-import { currentUser } from "../../http/middlewares/current-user";
-import { requireAuth } from "../../http/middlewares/require-auth";
-import { checkPermission } from "../../http/middlewares/check-permission";
+import { handleValidationForGraphql, withAuthAndPermission } from "../../helpers/util";
+import commentRequestSchema from "../../http/request/comment/comment-request";
+import { GraphqlNotAuthorizedError } from "../graphql-error";
 
 const getCommentService = (): ICommentService => Container.resolve<ICommentService>("CommentService");
 
@@ -16,12 +16,11 @@ export const createComment = {
     postId: { type: GraphQLInt },
   },
   resolve: async (_: unknown, args: { description: string; rating: number; postId: number }, context:any) => {
-    await currentUser(context.req, context.res, () => {});
-    await requireAuth(context.req, context.res, () => {});
-    await checkPermission('comment.create');
+    await withAuthAndPermission(context.req, context.res, 'comment.create');
+    handleValidationForGraphql(commentRequestSchema, args);
 
     return await getCommentService().create(args);
-  },
+  }
 };
 
 export const updateComment = {
@@ -33,23 +32,20 @@ export const updateComment = {
     postId: { type: GraphQLInt },
   },
   resolve: async (_: unknown, args: {id:number, description: string; rating: number; postId: number }, context:any) => {
-    await currentUser(context.req, context.res, () => {});
-    await requireAuth(context.req, context.res, () => {});
-    await checkPermission('comment.update');
+    await withAuthAndPermission(context.req, context.res, 'comment.update');
+    handleValidationForGraphql(commentRequestSchema, args);
 
     return await getCommentService().update(args.id, args);
-  },
+  }
 };
 
 export const deleteComment = {
   type: GraphQLString,
   args: { id: { type: GraphQLInt } },
   resolve: async (_: unknown, args: { id: number }, context:any) => {
-    await currentUser(context.req, context.res, () => {});
-    await requireAuth(context.req, context.res, () => {});
-    await checkPermission('comment.delete');
+    await withAuthAndPermission(context.req, context.res, 'comment.delete')
 
     await getCommentService().delete(args.id);
     return "Comment deleted successfully";
-  },
+  }
 };

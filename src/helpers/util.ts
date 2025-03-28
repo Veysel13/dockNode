@@ -1,11 +1,13 @@
 'use strict'
 
 import { Request } from "express";
+import { currentUser } from "../http/middlewares/current-user";
+import { requireAuth } from "../http/middlewares/require-auth";
+import { checkPermission } from "../http/middlewares/check-permission";
+import { GraphqlNotAuthorizedError, graphqlRequireAuth, GraphqlValidationError } from "../graphql/graphql-error";
 
-const path = require('path')
 const requestIp = require('request-ip')
 const validUrl = require('valid-url');
-
 
 export const generateSmsCode = () => {
     let verificationCode
@@ -64,3 +66,26 @@ export const getRequestedFields = (info: any, parentType?: string): string[] => 
   
     return fields;
   };
+
+export const withAuthAndPermission23 = async (req: any, res:any, permission?: string) => {
+  await currentUser(req, req, () => {});
+  await graphqlRequireAuth(req, res, () => {});
+  if(permission){
+    await checkPermission(permission);
+  }
+};
+
+export const withAuthAndPermission = async (req: any, res: any, permission?: string) => {
+  await currentUser(req, req, () => {});
+  await graphqlRequireAuth(req, res, () => {});
+  if (permission) {
+    await checkPermission(permission);
+  }
+};
+
+export const handleValidationForGraphql = (requestSchema:any, args: any) => {
+  const { error } = requestSchema.validate(args);
+  if (error) {
+    throw new GraphqlValidationError(error.details[0].message);
+  }
+};

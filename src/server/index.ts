@@ -37,6 +37,8 @@ import signInRoutes from '../routes/auth/signin';
 import userRoutes from '../routes/user-routes';
 import postRoutes from '../routes/post-routes';
 import commentRoutes from '../routes/comment-routes';
+import { NotAuthorizedError } from '../errors/not-authorized-error';
+import { GraphqlNotAuthorizedError } from '../graphql/graphql-error';
 
 
 //Middlewares
@@ -58,21 +60,18 @@ app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
 
-/*app.use("/graphql", graphqlHTTP({ 
-    schema,
-    graphiql: true,
-    context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
-}));
-*/
-
-app.use(
-    "/graphql",
-    graphqlHTTP((req, res) => ({
-      schema,
-      graphiql: true,
-      context: { req, res }, // Burada req ve res context'e ekleniyor
-    }))
-  );
+try {
+    app.use(
+        "/graphql",
+        graphqlHTTP((req, res) => ({
+          schema,
+          graphiql: true,
+          context: { req, res },
+        }))
+      );
+} catch (error) {
+    throw new Error('');
+}
 
 app.all('*', async (req:any, res:any) => {
     throw new NotFoundError();

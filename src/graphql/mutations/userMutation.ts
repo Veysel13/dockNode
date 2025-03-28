@@ -3,14 +3,7 @@ import { UserType } from "../types/userType";
 import { Container } from "../../provider/repository-service-provider";
 import { IUserService } from "../../services/abstract/IUserService";
 import userRequestSchema from "../../http/request/user/user-request";
-
-
-const handleValidation = (args: any) => {
-  const { error } = userRequestSchema.validate(args);
-  if (error) {
-    throw new Error(error.details[0].message);
-  }
-};
+import { handleValidationForGraphql } from "../../helpers/util";
 
 const getUserService = (): IUserService => Container.resolve<IUserService>("UserService");
 
@@ -24,7 +17,7 @@ export const createUser = {
     },
     resolve: async (_: unknown, args: { name: string; lastname: string; email: string; password: string }) => {
         
-      handleValidation(args);
+      handleValidationForGraphql(userRequestSchema, args);
 
       return await getUserService().create(args);
     },
@@ -41,7 +34,7 @@ export const createUser = {
     },
     resolve: async (_: unknown, args: { id: number; name?: string; lastname?: string; email?: string; password?: string }) => {
       
-      handleValidation(args);
+      handleValidationForGraphql(userRequestSchema, args);
 
       const userService = getUserService();
 
