@@ -4,13 +4,15 @@ if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
 }
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
 //GraphQl
 //post image colomn ekle
+//kubernets
+//kafka
 
 
 // https://sequelize.org/docs/v6/getting-started/
