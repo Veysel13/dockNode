@@ -10,7 +10,7 @@ class ImageUpload {
         if (imgData) {
             const fileName = Date.now() + '.png'
 
-            const uploadPath = path.join(__dirname, '../../storage/uploads')+'/'+filePath 
+            const uploadPath = path.join(__dirname, '../storage/uploads')+'/'+filePath 
 
             fs.mkdirSync(uploadPath, { recursive: true });
 
@@ -20,7 +20,7 @@ class ImageUpload {
 
             return filePath+'/'+fileName
         } else {
-            return ''
+            return null
         }
     }
 }

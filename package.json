@@ -5,9 +5,10 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon index.ts",
-    "queue:work": "ts-node src/rabbitmq/consumer.ts",
+    "queue:work": "ts-node src/lib/rabbitmq/consumer.ts",
     "start": "npx ts-node index.ts",
     "migrate": "npx sequelize-cli db:migrate",
+    "make:migrate": "node -e \"require('child_process').execSync('npx sequelize-cli migration:generate --name ' + process.argv[1])\"",
     "migrate:undo": "npx sequelize-cli db:migrate:undo",
     "make:model": "node -e \"require('child_process').execSync('npx sequelize-cli model:generate --name ' + process.argv[1] + ' --attributes name:string', { stdio: 'inherit' })\"",
     "make:seed": "node -e \"require('child_process').execSync('npx sequelize-cli seed:generate --name ' + process.argv[1])\"",

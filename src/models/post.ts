@@ -4,6 +4,7 @@ import User from "./user";
 
 interface PostAttributes {
   id: number;
+  image:string;
   title: string;
   description: string;
   userId: number;
@@ -16,6 +17,7 @@ interface PostCreationAttributes extends Optional<PostAttributes,  "id" | "creat
 class Post extends Model<PostAttributes, PostCreationAttributes> implements PostAttributes {
   public id!: number;
   public title!: string;
+  public image!: string;
   public description!: string;
   public userId!: number;
   public readonly createdAt!: Date;
@@ -36,6 +38,10 @@ Post.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     description: {
       type: DataTypes.STRING,

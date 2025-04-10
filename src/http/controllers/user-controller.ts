@@ -44,7 +44,6 @@ export class UserController {
         try {
             const user = await this.userService.findById(parseInt(req.params.id));
             if(!user) throw new BadRequestError("Not Found User"); //errorResponse(res, 404, ['Not Found User']);
-            await user.setRoles([2,3]);
             successResponse(res, 200, 'User', [{user}]);
         } catch (error) {
             next(error)
@@ -67,7 +66,6 @@ export class UserController {
             next(error)
         }
     }
-
 
     addRoleAndPermission = async (req:Request, res: Response, next:NextFunction) => {
         try {

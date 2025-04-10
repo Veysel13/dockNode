@@ -5,6 +5,7 @@ import { IPostService } from "../../services/abstract/IPostService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
 import sendToQueue from "../../lib/rabbitmq/producer";
+import ImageUpload from "../../helpers/image-upload";
 
 export class PostController {
     private postService: IPostService;
@@ -17,9 +18,14 @@ export class PostController {
         try {        
             req.body.userId = req.currentUser?.id; 
 
-            const post = await this.postService.create(req.body);
+            const fileName = await ImageUpload.upload(req.body.image, "posts");
+            
+            let fields = { ...req.body };
+            fields.image = fileName;
+            
+            const post = await this.postService.create(fields);
 
-            await sendToQueue('post_queue', req.body);
+            await sendToQueue('post_queue', post);
 
             successResponse(res, 201, 'Created post', [{post}]);
         } catch (error) {
@@ -49,8 +55,17 @@ export class PostController {
 
      update = async (req:Request, res: Response, next:NextFunction) => {
         try {
-            const post = await this.postService.update(parseInt(req.params.id), req.body);
-            successResponse(res, 200, 'Updated post', [{post}]);
+
+            const post = await this.postService.findById(parseInt(req.params.id), true);
+            if(!post) throw new BadRequestError("Not Found Post");
+
+            const fileName = await ImageUpload.upload(req.body.image, "posts");
+            
+            let fields = { ...req.body };
+            fields.image = fileName ? fileName : post.image;
+
+            const updatedPost = await this.postService.update(parseInt(req.params.id), fields);
+            successResponse(res, 200, 'Updated post', [{updatedPost}]);
         } catch (error) {
             next(error)
         }

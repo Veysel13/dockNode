@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: sequalizeimport-app
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          value: "postgresdb"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: DB_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: DB_DATABASE
+        - name: RABBITMQ_URL
+          value: "amqp://guest:guest@rabbitmq:5672"
+        - name: MEMCACHED_HOST
+          value: "memcached"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  selector:
+    app: app
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+
+# -- docker-compose up --build
+
+#1) kubectl apply -f kubernetes/postgres-deployment.yaml
+# kubectl apply -f kubernetes/redis-deployment.yaml
+#kubectl apply -f kubernetes/memcached-deployment.yaml
+#kubectl apply -f kubernetes/rabbitmq-deployment.yaml
+#kubectl apply -f kubernetes/app-deployment.yaml
+
+#kubectl create secret generic postgres-secret \ --from-literal=DB_USER=postgres \ --from-literal=DB_PASSWORD=123456 \ --from-literal=DB_DATABASE=sequalize_import
+
+
+
+# kontroller
+#2) kubectl get deployments
+#3) kubectl get services  -> kubectl get svc  -> kubectl delete services --all
+#4) kubectl get pods -> kubectl logs <pad_name>  -> kubectl delete pods --all
+
+#3. Service'e Dışarıdan Erişim Sağlama
+#1) LoadBalancer IP Adresi Alma:  kubectl get svc sequalizeimport-app-service
+
+
+# Docker huba repository yükleme
+#  docker tag sequalizeimport-app:latest veyselakpinar/sequalizeimport-app:v1.0 
+#  docker push veyselakpinar/sequalizeimport-app:v1.0 
+
+# docker pull veyselakpinar/sequalizeimport-app:latest   -> projeyi çekmek için
+
+# docker stop sequalizeimport-container 
+# docker rm sequalizeimport-container 
+# docker run -d --name sequalizeimport-container -p 3000:3000 veyselakpinar/sequalizeimport-app:v1.0
+
+
+#Adım 2: Logları Canlı Olarak İzlemek
+# docker logs -f sequalizeimport-container
