@@ -1,7 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../../models/user";
-import Permission from "../../models/permission";
-import Role from "../../models/role";
 import { BadRequestError } from "../../errors/bad-request-error";
 import { IUserService } from "../../services/abstract/IUserService";
 import { Container } from "../../provider/repository-service-provider";

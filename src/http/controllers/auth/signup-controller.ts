@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import { IUserService } from "../../../services/abstract/IUserService";
 import { Container } from "../../../provider/repository-service-provider";
 import { BadRequestError } from "../../../errors/bad-request-error";
+import { successResponse } from "../../../helpers/response-handler";
 
 class SignupController {
   private userService: IUserService;
@@ -25,7 +26,7 @@ class SignupController {
 
     const userJwt   = await user?.generateToken();
 
-    res.status(201).send({ user: user, token: userJwt });
+    successResponse(res, 201, 'Created User', { user: user, token: userJwt });
   } catch (err) {
     next(err);
   }

@@ -7,6 +7,10 @@ app.use(express.json());
 const RABBITMQ_URL:string = process.env.RABBITMQ_URL || "amqp://localhost";
 
 async function sendToQueue(queueName: string, message: object) {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
+
   try {
     const connection = await amqp.connect(RABBITMQ_URL);
     const channel = await connection.createChannel();

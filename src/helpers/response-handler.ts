@@ -1,7 +1,7 @@
 
 import { Response } from "express";
 
-export const successResponse = (res: Response, status: number = 200, message: string, data: any[] = []) => {
+export const successResponse = (res: Response, status: number = 200, message: string, data: any = []) => {
     res.status(status).json({
         success: true,
         message,

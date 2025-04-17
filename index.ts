@@ -5,7 +5,7 @@ if (!process.env.JWT_KEY) {
 }
 
 const PORT = process.env.PORT || 3000;
-const ENV = process.env.ENVIRONMENT || 'local';
+const ENV  = process.env.ENVIRONMENT || 'local';
 
 if(ENV == 'production')
 server.listen(PORT, '0.0.0.0', () => console.log(`Server is live at localhost:${PORT}`));

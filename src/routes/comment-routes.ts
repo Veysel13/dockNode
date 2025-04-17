@@ -11,7 +11,7 @@ import schemaValidator from '../http/middlewares/schema-validator'
 router.post('/comment',[currentUser, requireAuth, schemaValidator('commentRequest'), checkPermission('comment.create')], CommentController.create);
 router.get('/comment', [currentUser, requireAuth, checkPermission('comment.view')], CommentController.getAll);
 router.get('/comment/:id', [currentUser, requireAuth, checkPermission('comment.view')], CommentController.find);
-router.put('/comment/:id', [currentUser, requireAuth, schemaValidator('commentRequest'), checkPermission('comment.update')], CommentController.update);
+router.put('/comment/:id', [currentUser, requireAuth, schemaValidator('commentUpdateRequest'), checkPermission('comment.update')], CommentController.update);
 router.delete('/comment/:id', [currentUser, requireAuth, checkPermission('comment.delete')], CommentController.delete);
 
 export default router;

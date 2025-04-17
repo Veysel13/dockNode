@@ -16,6 +16,10 @@ export class RabbitMQTransport extends Transport {
     }
 
     async connect() {
+        if (process.env.NODE_ENV === 'test') {
+            return;
+        }
+
         try {
             const connection = await amqplib.connect(RABBITMQ_URL);
             this.channel = await connection.createChannel();
@@ -27,6 +31,10 @@ export class RabbitMQTransport extends Transport {
     }
 
     async log(info: any, callback: () => void) {
+        if (process.env.NODE_ENV === 'test') {
+            return;
+        }
+        
         if (!this.channel) {
             console.error("❌ RabbitMQ bağlantısı yok, log gönderilemedi.");
             return callback();

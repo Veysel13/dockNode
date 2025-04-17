@@ -27,7 +27,7 @@ export class PostController {
 
             await sendToQueue('post_queue', post);
 
-            successResponse(res, 201, 'Created post', [{post}]);
+            successResponse(res, 201, 'Created post', {post});
         } catch (error) {
             next(error)
         }
@@ -36,7 +36,7 @@ export class PostController {
      getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const post = await this.postService.all()
-            successResponse(res, 200, 'Get post', [{post}]);
+            successResponse(res, 200, 'Get post', {post});
         } catch (error) { 
             next('Post not found')
         }
@@ -47,7 +47,7 @@ export class PostController {
             const post = await this.postService.findById(parseInt(req.params.id), true);
             if(!post) throw new BadRequestError("Not Found Post"); //errorResponse(res, 404, ['Not Found User']);
 
-            successResponse(res, 200, 'Post', [{post}]);
+            successResponse(res, 200, 'Post', {post});
         } catch (error) {
             next(error)
         }
@@ -65,7 +65,7 @@ export class PostController {
             fields.image = fileName ? fileName : post.image;
 
             const updatedPost = await this.postService.update(parseInt(req.params.id), fields);
-            successResponse(res, 200, 'Updated post', [{updatedPost}]);
+            successResponse(res, 200, 'Updated post', {post:updatedPost});
         } catch (error) {
             next(error)
         }
@@ -74,7 +74,7 @@ export class PostController {
      delete = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const post = await this.postService.delete(parseInt(req.params.id));
-            successResponse(res, 200, 'Deleted post', []);
+            successResponse(res, 200, 'Deleted post', {});
         } catch (error) {
             next(error)
         }

@@ -22,7 +22,7 @@ export class CommentController {
             
             await sendToQueue('comment_queue', req.body);
             
-            successResponse(res, 201, 'Created comment', [{comment}]);
+            successResponse(res, 201, 'Created comment', {comment});
         } catch (error) {
             next(error)
         }
@@ -31,7 +31,7 @@ export class CommentController {
      getAll = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const comment = await this.commentService.all()
-            successResponse(res, 200, 'Get comment', [{comment}]);
+            successResponse(res, 200, 'Get comment', {comment});
         } catch (error) {        
             next('comment not found')
         }
@@ -41,7 +41,7 @@ export class CommentController {
         try {
             const comment = await this.commentService.findById(parseInt(req.params.id));
             if(!comment) throw new BadRequestError("Not Found comment"); //errorResponse(res, 404, ['Not Found comment']);
-            successResponse(res, 200, 'Comment', [{comment}]);
+            successResponse(res, 200, 'Comment', {comment});
         } catch (error) {
             next(error)
         }
@@ -51,7 +51,7 @@ export class CommentController {
         try {
             const {name, email} = req.body
             const comment = await this.commentService.update(parseInt(req.params.id), req.body);
-            successResponse(res, 200, 'Updated comment', [{comment}]);
+            successResponse(res, 200, 'Updated comment', {comment});
         } catch (error) {
             next(error)
         }
@@ -60,7 +60,7 @@ export class CommentController {
      delete = async (req:Request, res: Response, next:NextFunction) => {
         try {
             const comment = await this.commentService.delete(parseInt(req.params.id));
-            successResponse(res, 200, 'Deleted comment', []);
+            successResponse(res, 200, 'Deleted comment', {});
         } catch (error) {
             next(error)
         }
