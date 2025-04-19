@@ -2,7 +2,7 @@ import { Container } from "../provider/repository-service-provider";
 import { ICommentService } from "../services/abstract/ICommentService";
 import { BaseJob } from "./BaseJob";
 
-export class CommentJob extends BaseJob {
+export default class CommentJob extends BaseJob {
   queueName = "comment_queue";
 
   async process(data: any) {

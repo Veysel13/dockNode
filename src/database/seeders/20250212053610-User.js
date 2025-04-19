@@ -18,6 +18,7 @@ module.exports = {
        name: 'John',
        lastname:'Doe',
        email:'veysel1@gmail.com',
+       password:"123456789",
        created_at: new Date(),
        updated_at: new Date(),
      },
@@ -26,6 +27,7 @@ module.exports = {
       name: 'John2',
       lastname:'Doe',
       email:'veysel2@gmail.com',
+      password:"123456789",
       created_at: new Date(),
       updated_at: new Date(),
     }

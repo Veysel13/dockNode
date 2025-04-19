@@ -3,6 +3,7 @@ import Redis from "ioredis";
 const redis = new Redis({
   host: "redis",  // Docker'daki servis ismi
   port: 6379,     // Redis varsayılan portu
+  maxRetriesPerRequest: null,
 });
 
 redis.on("connect", () => {

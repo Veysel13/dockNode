@@ -5,6 +5,6 @@ const router = express.Router();
 
 import schemaValidator from '../../http/middlewares/schema-validator'
 
-router.post("/user/signup", [schemaValidator('signupRequestSchema')], SignupController.signup);
+router.post("/", [schemaValidator('signupRequestSchema')], SignupController.signup);
 
 export default router;

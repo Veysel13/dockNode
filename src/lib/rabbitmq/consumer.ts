@@ -13,8 +13,15 @@ async function loadJobs(): Promise<BaseJob[]> {
     for (const file of jobFiles) {
       if (file !== "BaseJob.ts" && file.endsWith(".ts")) {
         const jobModule = await import(`../../jobs/${file.replace(".ts", "")}`);
-        const JobClass = Object.values(jobModule)[0] as { new (): BaseJob };  
-        jobs.push(new JobClass());
+        const JobClass = jobModule.default;
+
+        if (typeof JobClass !== "function") {
+          console.warn(`❗ Geçersiz job class: ${file}`);
+          continue;
+        }
+
+        const jobInstance = new JobClass();
+        jobs.push(jobInstance);
       }
     }
   

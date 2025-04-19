@@ -6,6 +6,7 @@ import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
 import sendToQueue from "../../lib/rabbitmq/producer";
 import ImageUpload from "../../helpers/image-upload";
+import { addPostToQueue } from "../../jobs/queues/post.queue";
 
 export class PostController {
     private postService: IPostService;
@@ -25,7 +26,10 @@ export class PostController {
             
             const post = await this.postService.create(fields);
 
-            await sendToQueue('post_queue', post);
+            //rabbit mq
+            await sendToQueue('post_queue', fields);
+            //queue
+            await addPostToQueue(fields);
 
             successResponse(res, 201, 'Created post', {post});
         } catch (error) {

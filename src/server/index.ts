@@ -8,6 +8,8 @@ import path from 'path';
 import i18n from '../config/i18n';
 import { graphqlHTTP } from "express-graphql";
 import schema from "../graphql/schema";
+import { scheduleCronJobs } from '../console/kernel';
+import '../jobs';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -34,6 +36,8 @@ app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 5000
 import errorHandler from '../http/middlewares/error-handler';
 import { NotFoundError } from '../errors/not-found-error';
 import maintance from '../http/middlewares/maintance';
+import { apiLimiter, signInLimiter, signUpLimiter } from '../http/middlewares/security/rateLimiter';
+import { securityHeaders } from '../http/middlewares/security/helmet';
 
 import signUpRoutes from '../routes/auth/signup';
 import signInRoutes from '../routes/auth/signin';
@@ -43,13 +47,17 @@ import commentRoutes from '../routes/comment-routes';
 import { logMiddleware } from '../http/middlewares/request-log';
 
 
+
 //Middlewares
 
 //app.use(express.json());
 app.use(json());
-app.set('trust proxy', true);
+//app.set('trust proxy', true);
 app.use(express.urlencoded({extended:true}))
 app.use(cors())
+app.use(securityHeaders);
+app.use(apiLimiter);
+scheduleCronJobs()
 
 //app.use(logMiddleware);
 
@@ -58,8 +66,8 @@ app.use(cors())
 //Maintance
 app.use(maintance)
 
-app.use('/api', signUpRoutes);
-app.use('/api', signInRoutes)
+app.use('/api/signup', signUpLimiter, signUpRoutes);
+app.use('/api/signin', signInLimiter, signInRoutes)
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);

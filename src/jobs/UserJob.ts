@@ -1,6 +1,6 @@
 import { BaseJob } from "./BaseJob";
 
-export class UserJob extends BaseJob {
+export default class UserJob extends BaseJob {
   queueName = "user_queue";
 
   async process(data: any) {

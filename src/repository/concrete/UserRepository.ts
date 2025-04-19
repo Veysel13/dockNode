@@ -58,7 +58,7 @@ export class UserRepository<T> extends BaseRepository<any> implements IUserRepos
 
     async getRoleWithPermissions(id:number): Promise<User | null> {
 
-      return await cache.remember(`user_roles_permissions:${id}`, 20, async () => {
+      return await cache.remember(`user_roles_permission:${id}`, 20, async () => {
         return await User.findByPk(id, {
           include: [
             { model: Permission, as: "permissions", required: false },

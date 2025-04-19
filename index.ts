@@ -14,7 +14,17 @@ server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
 
-//post image colomn ekle
+/*
+NestJS benzeri syntax oluşturabiliriz:
+
+ts
+Kopyala
+Düzenle
+@RequirePermission("create_post")
+router.post("/post", createPost);
+*/
+
+
 //kafka
 //kubernets
 
