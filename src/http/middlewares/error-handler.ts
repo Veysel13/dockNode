@@ -4,7 +4,7 @@ import { logger } from '../../lib/logger';
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
 
-  logger.error(`[ERROR] ${req.method} ${req.url} - ${err.message}`);
+  logger.error(`${req.method} ${req.url} - ${err.message}`);
 
   if (err instanceof CustomError) {
     return res.status(err.statusCode || 500).send({ errors: err.serializeErrors() });

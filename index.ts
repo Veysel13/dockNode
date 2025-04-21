@@ -14,6 +14,11 @@ server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
 
+//multer dosya yükleme, local veya aws disk seçimi
+//grpc ve microservice, ddd yapıları
+//kafka
+//kubernets
+
 /*
 NestJS benzeri syntax oluşturabiliriz:
 
@@ -24,9 +29,9 @@ Düzenle
 router.post("/post", createPost);
 */
 
-
-//kafka
-//kubernets
+//Erişimler
+// http://localhost:5050/browser/ -> pgadmin database
+// http://localhost:15672/#/queues -> rabbit mq
 
 
 // https://sequelize.org/docs/v6/getting-started/
@@ -43,5 +48,8 @@ router.post("/post", createPost);
 
 // npm install --save-dev typescript ts-node @types/node
 // npx tsc --init
+
+
+
 
 

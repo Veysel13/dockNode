@@ -7,7 +7,7 @@ export default class PostJob extends BaseJob {
 
   async process(data: any) {
     const postService = Container.resolve<IPostService>("PostService");
-    await postService.create(data);
+    //await postService.create(data);
     console.log(`Processing PostJob: ${JSON.stringify(data)}`);
   }
 }

@@ -4,9 +4,7 @@ import { Container } from "../../provider/repository-service-provider";
 import { IPostService } from "../../services/abstract/IPostService";
 import { errorResponse, successResponse } from "../../helpers/response-handler";
 import { BadRequestError } from "../../errors/bad-request-error";
-import sendToQueue from "../../lib/rabbitmq/producer";
 import ImageUpload from "../../helpers/image-upload";
-import { addPostToQueue } from "../../jobs/queues/post.queue";
 
 export class PostController {
     private postService: IPostService;
@@ -19,17 +17,15 @@ export class PostController {
         try {        
             req.body.userId = req.currentUser?.id; 
 
-            const fileName = await ImageUpload.upload(req.body.image, "posts");
+            //const fileName = await ImageUpload.upload(req.body.image, "posts");
+            const fileName = await ImageUpload.uploadBase64Image(req.body.image, "posts");
+            
+            console.log('fileName', fileName);
             
             let fields = { ...req.body };
             fields.image = fileName;
             
             const post = await this.postService.create(fields);
-
-            //rabbit mq
-            await sendToQueue('post_queue', fields);
-            //queue
-            await addPostToQueue(fields);
 
             successResponse(res, 201, 'Created post', {post});
         } catch (error) {
@@ -63,7 +59,7 @@ export class PostController {
             const post = await this.postService.findById(parseInt(req.params.id), true);
             if(!post) throw new BadRequestError("Not Found Post");
 
-            const fileName = await ImageUpload.upload(req.body.image, "posts");
+            const fileName = await ImageUpload.uploadBase64Image(req.body.image, "posts");
             
             let fields = { ...req.body };
             fields.image = fileName ? fileName : post.image;

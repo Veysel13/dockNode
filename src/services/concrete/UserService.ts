@@ -32,15 +32,17 @@ export class UserService<T> implements IUserService {
     }
 
     async create(data: Partial<T>): Promise<T> {
-        return await this.userRepository.create(data);
+        const user = await this.userRepository.create(data);
+        return user;
     }
 
     async update(id: number, data: Partial<T>): Promise<T | null> {
-        return await this.userRepository.update(id, data);
+        const user = await this.userRepository.update(id, data);
+        return user;
     }
 
     async delete(id: number): Promise<void> {
-        return await this.userRepository.delete(id);
+        return await this.userRepository.delete(id); 
     }
 
 }

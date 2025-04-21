@@ -16,7 +16,6 @@ async function loadJobs(): Promise<BaseJob[]> {
         const JobClass = jobModule.default;
 
         if (typeof JobClass !== "function") {
-          console.warn(`❗ Geçersiz job class: ${file}`);
           continue;
         }
 

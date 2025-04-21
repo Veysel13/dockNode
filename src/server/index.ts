@@ -9,7 +9,9 @@ import i18n from '../config/i18n';
 import { graphqlHTTP } from "express-graphql";
 import schema from "../graphql/schema";
 import { scheduleCronJobs } from '../console/kernel';
-import '../jobs';
+import '../jobs/bullmq';
+import "../events/loadEvents"
+import { registerObservers } from "../observers/index";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -57,7 +59,9 @@ app.use(express.urlencoded({extended:true}))
 app.use(cors())
 app.use(securityHeaders);
 app.use(apiLimiter);
-scheduleCronJobs()
+
+scheduleCronJobs();
+registerObservers();
 
 //app.use(logMiddleware);
 

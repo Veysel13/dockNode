@@ -1,13 +1,17 @@
 'use strict';
 
+import { uploadSingleImage } from "../lib/multer";
+import { Request, Response } from "express";
+
 const path = require('path');
 const fs = require('fs')
 
 class ImageUpload {
 
-   static async upload(imgData:string, filePath:string = 'avatars') {
+   static async uploadBase64Image(imgData:string, filePath:string = 'avatars') {
 
         if (imgData) {
+            
             const fileName = Date.now() + '.png'
 
             const uploadPath = path.join(__dirname, '../storage/uploads')+'/'+filePath 
@@ -23,6 +27,16 @@ class ImageUpload {
             return null
         }
     }
+
+    static async uploadImage(req: Request, res: Response): Promise<string | null> {
+        try {
+          const filePath = await uploadSingleImage(req, res);
+          return filePath;
+        } catch (err) {
+          console.error("Upload error:", err);
+          return null;
+        }
+      }
 }
 
 export default ImageUpload;
