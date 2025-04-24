@@ -14,7 +14,6 @@ server.listen(PORT, () => console.log(`Server is live at localhost:${PORT}`));
 
 //Workflow
 
-//multer dosya yükleme, local veya aws disk seçimi
 //grpc ve microservice, ddd yapıları
 //kafka
 //kubernets
